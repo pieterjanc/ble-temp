@@ -7,7 +7,7 @@
 struct env_data_t
 {
     int16_t temp_value;
-    int16_t hum_value;
+    uint16_t hum_value;
 };
 
 static struct env_data_t env_data = {
@@ -38,14 +38,17 @@ BT_GATT_SERVICE_DEFINE(ess_service,
                        BT_GATT_CCC(NULL,
                                    BT_GATT_PERM_READ | BT_GATT_PERM_WRITE), );
 
-void ble_env_update(int16_t temp, int16_t hum)
+void ble_env_update_temperature(int16_t temp)
 {
     if (temp != env_data.temp_value)
     {
         env_data.temp_value = temp;
         bt_gatt_notify(NULL, &ess_service.attrs[2], &temp, sizeof(temp));
     }
+}
 
+void ble_env_update_humidity(uint16_t hum)
+{
     if (hum != env_data.hum_value)
     {
         env_data.hum_value = hum;

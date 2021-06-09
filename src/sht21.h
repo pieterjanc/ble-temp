@@ -11,3 +11,10 @@ void sht21_reset(void);
  * @return 0 on success, negative otherwise
  */
 int sht21_temperature(int16_t *temp);
+
+/**
+ * Start humidity measurement and read result
+ * @param[out] hum Humidity in 1/100 percent
+ * @return 0 on success, negative otherwise
+ */
+int sht21_humidity(uint16_t *hum);

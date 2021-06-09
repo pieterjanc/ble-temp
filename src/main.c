@@ -13,6 +13,29 @@ static const struct bt_data adv[] = {
         BT_DATA_BYTES(BT_DATA_UUID16_ALL, BT_UUID_16_ENCODE(BT_UUID_ESS_VAL)),
 };
 
+static int measure()
+{
+    int err;
+    int16_t temp;
+    uint16_t hum;
+
+    err = sht21_temperature(&temp);
+    if (err)
+    {
+        return err;
+    }
+    ble_env_update_temperature(temp);
+
+    err = sht21_humidity(&hum);
+    if (err)
+    {
+        return err;
+    }
+    ble_env_update_humidity(hum);
+
+    return 0;
+}
+
 void main(void)
 {
     int err;
@@ -33,18 +56,9 @@ void main(void)
 
     sht21_reset();
 
-    while (1)
+    while (true)
     {
-        int16_t temp;
-        err = sht21_temperature(&temp);
-        if (err)
-        {
-            k_sleep(K_SECONDS(10));
-            continue;
-        }
-
-        ble_env_update(temp, 0);
-
-        k_sleep(K_SECONDS(10));
+        measure();
+        k_sleep(K_MINUTES(1));
     }
 }
